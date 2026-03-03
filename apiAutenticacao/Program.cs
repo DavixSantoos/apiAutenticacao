@@ -1,7 +1,10 @@
 using apiAutenticacao.Data;
 using apiAutenticacao.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using System.Text;
 
 namespace apiAutenticacao
 {
@@ -16,35 +19,56 @@ namespace apiAutenticacao
             // imbernado.
             builder.Services.AddScoped<AuthService>();
 
+            builder.Services.AddScoped<TokenService>();
             builder.Services.AddScoped<UserServices>();
+            //Configuramos  a autenticação usando JWT Bearer).
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
+                AddJwtBearer(options =>
+                {
 
-            // Add services to the container.
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true, //Valida o emissor do token
+                        ValidateAudience = true, //Valida o destinatário do token
+                        ValidateLifetime = true, //Valida o tempo expiração do token
+                        ValidateIssuerSigningKey = true, //Valida a chave de assinatura do token
 
-            builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+                    };
+                });
+                    builder.Services.AddAuthorization();
+                    // Add services to the container.
 
-            builder.Services.AddDbContext<AppDbContext>(
-                options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-                );
+                    builder.Services.AddControllers();
+                    // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+                    builder.Services.AddOpenApi();
 
-            var app = builder.Build();
+                    builder.Services.AddDbContext<AppDbContext>(
+                        options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+                        );
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-                app.MapScalarApiReference();
-            }
+                    var app = builder.Build();
 
-            app.UseHttpsRedirection();
+                    // Configure the HTTP request pipeline.
+                    if (app.Environment.IsDevelopment())
+                    {
+                        app.MapOpenApi();
+                        app.MapScalarApiReference();
+                    }
+                    
+                    app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+                    app.UseAuthentication();
+                    app.UseAuthorization();
 
 
-            app.MapControllers();
+                    app.MapControllers();
 
-            app.Run();
+                    app.Run();
+                
+
         }
-    }
-}
+    } }

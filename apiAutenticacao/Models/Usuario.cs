@@ -27,7 +27,7 @@ namespace apiAutenticacao.Models
 
         public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; } = true;
-
+        public ICollection<Telefone> Telefones { get; set; } = new List<Telefone>();
         public ICollection<Endereco> Enderecos { get; set; } = new List<Endereco>();
 
 

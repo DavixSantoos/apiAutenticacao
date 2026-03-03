@@ -17,14 +17,14 @@ namespace apiAutenticacao.Services
         
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
-
-        public AuthService(IConfiguration config, AppDbContext context)
+        private readonly TokenService _tokenService;
+        public AuthService(IConfiguration config, AppDbContext context, TokenService tokenService)
         {
             _context = context;
             _config = config;
-
+            _tokenService = tokenService;
         }
-
+        
         public async Task<ResponseLogin> Login(LoginDTO dadosUsuario)
         {
 
@@ -36,16 +36,17 @@ namespace apiAutenticacao.Services
                 bool isValidPassword = Verify(dadosUsuario.Senha, usuarioEncontrado.Senha);
 
 
-
                 if (isValidPassword)
                 {
+                    string token = _tokenService.GenerateToken(usuarioEncontrado);
+
                     return new ResponseLogin
                     {
                         Erro = false,
                         Message = "Login realizado com sucesso",
+                        Token = token,
                         Usuario = new UsuarioResponseDTO
                         {
-
                             Id = usuarioEncontrado.Id,
                             Nome = usuarioEncontrado.Nome,
                             Email = usuarioEncontrado.Email,
@@ -59,12 +60,9 @@ namespace apiAutenticacao.Services
                                 Cidade = e.Cidade,
                                 Estado = e.Estado,
                                 Pais = e.Pais
-                            })
-                            .ToList()
-                        }
-
-                    };
-
+                            }).ToList()
+                        } 
+                    }; 
                 }
 
                 return new ResponseLogin
@@ -187,7 +185,7 @@ namespace apiAutenticacao.Services
             return new ResponseAlteraSenha
             {
                 Erro = false,
-                Message = _config["Mensagens:SenhaAlteradaSucesso"]
+                Message = "Mensagens:SenhaAlteradaSucesso"
 
             };
 
