@@ -30,7 +30,7 @@ namespace apiAutenticacao.Data
             // Configuração: 1 Usuário tem N (Muitas) Tarefas (Turnos/Escalas)
             modelBuilder.Entity<Usuario>()
                 .HasMany(u => u.Tarefas)
-                .WithOne(t => t.Usuario) // Supondo que na classe Tarefa tem uma prop "Usuario"
+                .WithOne(t => t.UsuarioId) // Supondo que na classe Tarefa tem uma prop "Usuario"
                 .HasForeignKey(t => t.UsuarioId);
         }
     }

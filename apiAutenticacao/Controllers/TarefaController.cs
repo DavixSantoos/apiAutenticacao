@@ -27,7 +27,7 @@ namespace apiAutenticacao.Controllers
 
         [HttpPost]
 
-        public async Task<IActionResult> CadastrarTarefa([FromBody] TarefaDTO dto)
+        public async Task<IActionResult> CadastrarTarefa([FromBody] TarefaResponseDTO dto)
         {
             var tarefa = new Tarefa
             {

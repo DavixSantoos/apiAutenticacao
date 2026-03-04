@@ -1,6 +1,6 @@
 ﻿namespace apiAutenticacao.Models.DTO
 {
-    public class TarefaDTO
+    public class TarefaResponseDTO
     {
     }
 }

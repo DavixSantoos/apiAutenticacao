@@ -30,6 +30,7 @@ namespace apiAutenticacao.Models
         public ICollection<Telefone> Telefones { get; set; } = new List<Telefone>();
         public ICollection<Endereco> Enderecos { get; set; } = new List<Endereco>();
 
+        public ICollection<Tarefa> Tarefas { get; set; } = new List<Tarefa>();
 
         public Usuario()
         {
