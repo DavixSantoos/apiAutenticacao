@@ -44,9 +44,7 @@ namespace apiAutenticacao.Models
         [Required]
         public int UsuarioId { get; set; } // Chave estrangeira para o usuário
 
-        [ForeignKey(nameof(UsuarioId))]
-        public Usuario Usuario { get; set; } // Propriedade de navegação para o usuário
-       
+        
 
 
 

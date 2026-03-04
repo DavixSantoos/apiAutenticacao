@@ -9,6 +9,7 @@ namespace apiAutenticacao.Models.DTO
         public string Nome { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
 
+        public ICollection<Telefone> Telefones { get; set; } = new List<Telefone>();
         public List<EnderecoResponseDTO> Enderecos { get; set; } = new List<EnderecoResponseDTO>();
     }
 }
